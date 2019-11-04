@@ -22,27 +22,16 @@ function modelReady() {
 	console.log('Model is ready!');
 	// mobileNet.predict(video, gotResults);
 }
-function predict() {
+/*function predict() {
 	mobileNet.predict(video, gotResults);
 }
 
 function mousePressed() {
-	/*const logits = features.infer(video);
-	knn.classify(logits, gotResults);
-*/
-}
-function keyPressed() {
-const logits = features.infer(video);
-	if(key == 'a') {
-		knn.addExample(logits, 'A');
-		console.log('option A')
-	} else if(key == 'b') {
-		knn.addExample(logits, 'B');
-		console.log('option B')
-	} else {
-		console.log('nothing')
-	}
-}
+	// const logits = features.infer(video);
+	// knn.classify(logits, gotResults);
+
+}*/
+
 
 // Handle results
 function gotResults(error, results) {
@@ -102,19 +91,36 @@ function inputEvent() {
 	console.log('you are typing ', this.value());
 	value = this.value();
 	if (value !== '') {
-		trainBtn.mousePressed(saveData);
+		trainModel();
 	} else {
 		console.log('empty!')
 	}
 }
 
+function trainModel() {
+	trainBtn.mousePressed(saveData);
+}
+
 function saveData() {
-	console.log('Train clicked')
+	console.log('trying to save data')
+	console.log(inputEvent)
 	const logits = features.infer(video);
-	console.log(logits)
+	knn.addExample(logits, inputEvent);
 	knn.classify(logits, gotResults);
 }
 
+/*function keyPressed() {
+const logits = features.infer(video);
+	if(key == 'a') {
+		knn.addExample(logits, 'A');
+		console.log('option A')
+	} else if(key == 'b') {
+		knn.addExample(logits, 'B');
+		console.log('option B')
+	} else {
+		console.log('nothing')
+	}
+}*/
 function draw() {
 	background(255);
 	text(start, width / 2, height / 3);	
