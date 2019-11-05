@@ -34,11 +34,16 @@ const modelReady = () => {
 const gotResults = (error, results) => {
 	if(!error) {
 		console.log(results);
+		showResults(results);
 	} else {
 		console.error(error);
 	}
 }
-
+const showResults = (results) => {
+	const h2 = document.createElement('h2');
+	document.body.appendChild(h2)
+	h2.innerHTML = results.label;
+}
 // Open camera on click
 camera.addEventListener('click', e => {
 	console.log('Open camera');
@@ -74,6 +79,8 @@ const openCamera = () => {
 
 				// Using KNN to classify features
 				knn.classify(logits, gotResults);
+				console.log('Logits: ', logits);
+				console.log(logits.dataSync());
 			});
 	    })
 	    .catch(function(error) {
@@ -90,7 +97,7 @@ const openCamera = () => {
 
 		const imageDataURL = canvas.toDataURL('image/png');
 		image.setAttribute('src', imageDataURL);
-		console.log(image.src)
+		// console.log(image.src)
 	}
 }
 
