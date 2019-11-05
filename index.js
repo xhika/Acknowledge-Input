@@ -33,16 +33,18 @@ const modelReady = () => {
 // Handle results from snapshot
 const gotResults = (error, results) => {
 	if(!error) {
-		console.log(results);
+		// console.log(results);
 		showResults(results);
 	} else {
 		console.error(error);
 	}
 }
 const showResults = (results) => {
-	const h2 = document.createElement('h2');
-	document.body.appendChild(h2)
-	h2.innerHTML = results.label;
+	const label = results.label;
+	const h2 = document.querySelector('.view_result');
+	const div = document.querySelector('.result_container');
+
+	h2.innerHTML = label;
 }
 // Open camera on click
 camera.addEventListener('click', e => {

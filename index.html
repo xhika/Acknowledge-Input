@@ -8,16 +8,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script> -->
     <!-- ml5 -->
     <script src="https://unpkg.com/ml5@0.3.0/dist/ml5.min.js"></script>
+    <!-- tailwind css -->
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     </head>
 
     <body>
-
-		<video id="video" autoplay></video>
-
-		<button id="camera">Open Camera</button>
-		<button class="train">Train Model</button>
-		<input type="text" name="" placeholder="Describe your photo">
-
+<device type="media" onchange="update(this.data)"></device>
+		<video id="video" class="flex justify-center" autoplay></video>
+        <div class="flex justify-center my-4">
+            <button id="camera" class="w-4/5 sm:w-1/5 bg-teal-600   hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Open Camera
+            </button>
+        </div>
+        <div class="my-2 flex justify-center">
+    		<button class="train w-4/5 sm:w-1/5 bg-teal-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Train Model</button>
+        </div>
+        <div class="my-2 flex justify-center">
+            <input type="text" placeholder="Describe your photo" class="w-4/5 sm:w-1/5 bg-gray-300 outline-none focus:bg-white focus:border-teal border-2 border-gray-300 rounded py-2 border-solid border-black my-2 shadow">
+        </div>
+        
+        <div class="result_container flex justify-center my-4">
+            <h2 class="view_result w-4/5 sm:w-1/5 flex justify-center text-black font-bold py-4"></h2>
+        </div>
 
     <script src="index.js"></script>
     </body>
