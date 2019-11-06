@@ -15,9 +15,6 @@ const height = window.innerHeight;
 canvas.height = height;
 canvas.width = width;
 
-// Support for retina
-canvas.style.height = `${canvas.height / 2}px`;
-canvas.style.width = `${canvas.width / 2}px`;
 
 // Declarations
 const video = document.querySelector('video');
@@ -33,7 +30,7 @@ const modelReady = () => {
 // Handle results from snapshot
 const gotResults = (error, results) => {
 	if(!error) {
-		// console.log(results);
+		console.log(results);
 		showResults(results);
 	} else {
 		console.error(error);
@@ -47,7 +44,7 @@ const showResults = (results) => {
 	h2.innerHTML = label;
 }
 // Open camera on click
-camera.addEventListener('click', e => {
+camera.addEventListener('click', () => {
 	console.log('Open camera');
 	openCamera();
 })
@@ -56,13 +53,27 @@ camera.addEventListener('click', e => {
 const openCamera = () => {
 	const image = document.createElement('img');
 
-	video.width = canvas.width;
-	video.height = canvas.height;
-
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-	    // Not adding `{ audio: true }` since we only want video now
-	    navigator.mediaDevices.getUserMedia({ video: true })
+
+		// Setting constraints for camera
+		const constraints = {
+  			video: {
+  				width: {
+  					min: 1280,
+  					ideal: 1920,
+  					max: 2560
+  				}, 
+  				height: {
+  					min: 720,
+  					ideal: 1080,
+  					max: 1440
+  				},
+  			}
+		};
+		
+
+	    navigator.mediaDevices.getUserMedia(constraints)
 	    .then(function(stream) {
 	        //video.src = window.URL.createObjectURL(stream);
 	        video.srcObject = stream;
@@ -94,14 +105,15 @@ const openCamera = () => {
 	const takeSnapshot = () => {
 		console.log('Taking Snapshot')
 
-		context.drawImage(video, 0, 0, width, height);
-
+		context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
 		const imageDataURL = canvas.toDataURL('image/png');
-		image.setAttribute('src', imageDataURL);
+		image.src = imageDataURL;
+
 		// console.log(image.src)
 	}
 }
+
 
 
 // Declaring ml5 models and methods

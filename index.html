@@ -2,7 +2,11 @@
 <html lang="en">
     <head>
     <title></title>
-    <!-- p5 -->
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- p5 -->
 <!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script> -->
@@ -13,18 +17,17 @@
     </head>
 
     <body>
-<device type="media" onchange="update(this.data)"></device>
-		<video id="video" class="flex justify-center" autoplay></video>
+		<video id="video" autoplay></video>
         <div class="flex justify-center my-4">
-            <button id="camera" class="w-4/5 sm:w-1/5 bg-teal-600   hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Open Camera
+            <button id="camera" class="w-4/5 sm:w-2/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Open Camera
             </button>
         </div>
         <div class="my-2 flex justify-center">
-    		<button class="train w-4/5 sm:w-1/5 bg-teal-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Train Model</button>
+    		<button class="train w-4/5 sm:w-2/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Train Model
+            </button>
         </div>
         <div class="my-2 flex justify-center">
-            <input type="text" placeholder="Describe your photo" class="w-4/5 sm:w-1/5 bg-gray-300 outline-none focus:bg-white focus:border-teal border-2 border-gray-300 rounded py-2 border-solid border-black my-2 shadow">
+            <input type="text" placeholder="Describe your photo" class="w-4/5 sm:w-2/5 bg-gray-300 outline-none focus:bg-white focus:border-blue-400 border-2 border-gray-400 rounded py-2 border-solid my-2 pl-2 shadow">
         </div>
         
         <div class="result_container flex justify-center my-4">
