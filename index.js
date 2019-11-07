@@ -27,24 +27,52 @@ const modelReady = () => {
 	console.log('Model is ready!');
 }
 
-// Handle results from snapshot
-const gotResults = (error, results) => {
-	if(!error) {
-		console.log(results);
-		showResults(results);
-	} else {
-		console.error(error);
-	}
-}
-const showResults = (results) => {
-	const label = results.label;
-	const h2 = document.querySelector('.view_result');
-	const div = document.querySelector('.result_container');
+// Adds example to classifier
+const addExample = (label) => {
+	console.log('Adding example to classifier')
+	// Get features from the image
+	const logits = features.infer(canvas);
 
-	h2.innerHTML = label;
+	// Adds example to KNN classifier with label from input
+	knn.addExample(logits, label);
 }
+
+// Classify frame
+const classifyImage = () => {
+
+	const logits = features.infer(canvas);
+	
+	// Using KNN to classify features
+	knn.classify(logits, (error, results) => {
+		if(!error) {
+			const h2 = document.getElementById('show_result');
+			console.log(results)
+			if(h2.textContent === '') {
+				h2.append(input.value);
+				h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-600 text-white font-bold py-2 px-4 rounded relative z-40';
+			} else if(h2.textContent !== '') {
+				h2.textContent = '';
+				h2.append(input.value);
+			} else {
+				return;
+			}
+			// knn.save();
+		} else {
+			console.error(error);
+		}
+
+	});
+	// console.log('Logits: ', logits);
+	// console.log(logits.dataSync());
+}
+const clearLabel = (label) => {
+	knn.clearLabel(label);
+	console.log('input', input.value)
+	input.value = '';
+}
+
 // Open camera on click
-camera.addEventListener('click', () => {
+camera.addEventListener('click', (e) => {
 	console.log('Open camera');
 	openCamera();
 })
@@ -72,28 +100,19 @@ const openCamera = () => {
   			}
 		};
 		
-
 	    navigator.mediaDevices.getUserMedia(constraints)
 	    .then(function(stream) {
-	        //video.src = window.URL.createObjectURL(stream);
 	        video.srcObject = stream;
 	        video.play();
 	        console.log('Camera ready!');
 
 	        trainBtn.addEventListener('click', (e) => {
 	        	takeSnapshot();
+	        	addExample(input.value);
+	        	classifyImage();
+
 	        	console.log('TRAINING');
-
-				// Get features from the image
-				const logits = features.infer(canvas);
-
-				// Adds example to KNN classifier with label from input
-				knn.addExample(logits, input.value);
-
-				// Using KNN to classify features
-				knn.classify(logits, gotResults);
-				console.log('Logits: ', logits);
-				console.log(logits.dataSync());
+	
 			});
 	    })
 	    .catch(function(error) {
@@ -122,7 +141,14 @@ const openCamera = () => {
 const knn = ml5.KNNClassifier();
 
 // Calling the image method with MobileNet model
-const mobileNet = ml5.imageClassifier('MobileNet', modelReady);
+const mobileNet = ml5.imageClassifier('MobileNet', modelReady());
 
 // Extract the already learned features from MobileNet
-const features = ml5.featureExtractor('MobileNet', modelReady);
+const features = ml5.featureExtractor('MobileNet', modelReady());
+
+const saveKnn = () => {
+	knn.save('KNNData');
+}
+const loadKnn = () => {
+	knn.load('./KNNdata.json');
+}
