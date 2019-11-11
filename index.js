@@ -20,7 +20,8 @@ canvas.width = width;
 const video = document.querySelector('video');
 const input = document.querySelector('input');
 const trainBtn = document.querySelector('button.train');
-const camera = document.getElementById('camera');
+const camera = document.getElementById('camera_button');
+
 
 
 const modelReady = () => {
@@ -45,17 +46,22 @@ const classifyImage = () => {
 	// Using KNN to classify features
 	knn.classify(logits, (error, results) => {
 		if(!error) {
-			const h2 = document.getElementById('show_result');
+			const h2 = document.getElementById('show_input');
 			console.log(results)
 			if(h2.textContent === '') {
 				h2.append(input.value);
-				h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-600 text-white font-bold py-2 px-4 rounded relative z-40';
+				h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-600 text-white font-bold py-2 px-4 rounded';
 			} else if(h2.textContent !== '') {
 				h2.textContent = '';
 				h2.append(input.value);
 			} else {
 				return;
 			}
+
+			if(results !== '') {
+				showPrediction(results)
+			}
+
 			// knn.save();
 		} else {
 			console.error(error);
@@ -70,6 +76,30 @@ const clearLabel = (label) => {
 	console.log('input', input.value)
 	input.value = '';
 }
+
+const showPrediction = (results) => {
+	const cameraDiv = document.getElementById('camera_div');
+	const obj = results.confidencesByLabel;
+	const h1 = document.getElementById('results')
+
+	const keys = Object.keys(obj);
+	const values = Object.values(obj);
+
+	console.log(values)
+	console.log(keys)
+
+	if(h1.textContent === '') {
+		cameraDiv.appendChild(h1);
+		h1.append(keys);
+		h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
+	} else if(h1.textContent !== '') {
+		h1.textContent = ''
+		h1.append(keys)
+	} else {
+		return
+	}
+}
+1464
 
 // Open camera on click
 camera.addEventListener('click', (e) => {
@@ -107,9 +137,14 @@ const openCamera = () => {
 	        console.log('Camera ready!');
 
 	        trainBtn.addEventListener('click', (e) => {
-	        	takeSnapshot();
-	        	addExample(input.value);
-	        	classifyImage();
+        		if (input.value === '') {
+					console.log('empty!')
+					return;
+				} else {
+		        	takeSnapshot();
+		        	addExample(input.value);
+		        	classifyImage();
+				}
 
 	        	console.log('TRAINING');
 	
@@ -128,7 +163,6 @@ const openCamera = () => {
 
 		const imageDataURL = canvas.toDataURL('image/png');
 		image.src = imageDataURL;
-
 		// console.log(image.src)
 	}
 }
