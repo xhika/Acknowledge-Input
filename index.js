@@ -105,13 +105,16 @@ camera.addEventListener('click', (e) => {
 	console.log('Open camera');
 	openCamera();
 })
-const hideBtn = () => {
-	camera.classList = 'hidden';
+
+const hideBtn = (button) => {
+	button.classList = 'hidden';
 }
-const showBtn = () => {
-	input.classList += 'block';
-	trainBtn.classList += 'block';
+
+const showBtn = (button) => {
+	button.classList += 'block';
+	button.classList += 'block';
 }
+
 // Open and handle camera
 const openCamera = () => {
 
@@ -143,8 +146,8 @@ const openCamera = () => {
 	        if(video.srcObject.active === true) {
 
         		console.log('Camera ready!');
-        		hideBtn();
-        		showBtn();
+        		hideBtn(camera);
+        		showBtn(input, trainBtn);
 
 	        }
 
