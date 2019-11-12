@@ -141,11 +141,11 @@ const openCamera = () => {
 	        video.srcObject = stream;
 	        video.play();
 	        if(video.srcObject.active === true) {
-	        	setTimeout(() => {
-	        		console.log('Camera ready!');
-	        		hideBtn();
-	        		showBtn();
-	        	}, 1300);
+
+        		console.log('Camera ready!');
+        		hideBtn();
+        		showBtn();
+
 	        }
 
 	        trainBtn.addEventListener('click', (e) => {
