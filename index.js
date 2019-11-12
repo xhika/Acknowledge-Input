@@ -2,7 +2,7 @@
 
 // Create canvas
 const canvas = document.createElement('canvas');
-document.body.appendChild(canvas);
+document.body.append(canvas);
 
 // Fetch the 2D context from the <canvas> element.
 const context = canvas.getContext('2d');
@@ -170,13 +170,12 @@ const openCamera = () => {
 	// Take a snapshot
 	const takeSnapshot = () => {
 		console.log('Taking Snapshot')
-
+		const h3 = document.querySelector('h3');
+		h3.classList = 'flex justify-center mt-8 font-sans';
 		context.drawImage(video, 0, 0, canvas.width, canvas.height);
-		// canvas.classList = 'max-w-sm lg:max-w-4xl';
-
+		canvas.classList = 'max-w-sm lg:max-w-4xl';
 		const imageDataURL = canvas.toDataURL('image/png');
 		image.src = imageDataURL;
-		
 		// console.log(image.src)
 	}
 }
