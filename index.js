@@ -99,16 +99,22 @@ const showPrediction = (results) => {
 		return
 	}
 }
-1464
 
 // Open camera on click
 camera.addEventListener('click', (e) => {
 	console.log('Open camera');
 	openCamera();
 })
-
+const hideBtn = () => {
+	camera.classList = 'hidden';
+}
+const showBtn = () => {
+	input.classList += 'block';
+	trainBtn.classList += 'block';
+}
 // Open and handle camera
 const openCamera = () => {
+
 	const image = document.createElement('img');
 
 	// Get access to the camera!
@@ -134,7 +140,13 @@ const openCamera = () => {
 	    .then(function(stream) {
 	        video.srcObject = stream;
 	        video.play();
-	        console.log('Camera ready!');
+	        if(video.srcObject.active === true) {
+	        	setTimeout(() => {
+	        		console.log('Camera ready!');
+	        		hideBtn();
+	        		showBtn();
+	        	}, 1300);
+	        }
 
 	        trainBtn.addEventListener('click', (e) => {
         		if (input.value === '') {
@@ -160,9 +172,11 @@ const openCamera = () => {
 		console.log('Taking Snapshot')
 
 		context.drawImage(video, 0, 0, canvas.width, canvas.height);
+		// canvas.classList = 'max-w-sm lg:max-w-4xl';
 
 		const imageDataURL = canvas.toDataURL('image/png');
 		image.src = imageDataURL;
+		
 		// console.log(image.src)
 	}
 }
