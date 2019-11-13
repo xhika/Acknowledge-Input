@@ -30,43 +30,42 @@ const modelReady = () => {
 
 // Adds example to classifier
 const addExample = (label) => {
-	console.log('Adding example to classifier')
+	console.log('Adding EXAMPLE')
 	// Get features from the image
 	const logits = features.infer(canvas);
 
 	// Adds example to KNN classifier with label from input
 	knn.addExample(logits, label);
+
+	const h2 = document.getElementById('show_input')
+
+	if(h2.innerHTML === '') {
+		h2.append(label);
+		h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-600 text-white font-bold py-2 px-4 rounded';
+	} else if(h2.innerHTML !== '') {
+		h2.innerHTML = '';
+		h2.append(label);
+	} else {
+		return;
+	}
+}
+
+const sleep = (ms) => {
+	return new Promise(res => setTimeout(res,ms));
 }
 
 // Classify frame
 const classifyImage = () => {
 
 	const logits = features.infer(canvas);
-	
 	// Using KNN to classify features
 	knn.classify(logits, (error, results) => {
 		if(!error) {
-			const h2 = document.getElementById('show_input');
-			console.log(results)
-			if(h2.textContent === '') {
-				h2.append(input.value);
-				h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-600 text-white font-bold py-2 px-4 rounded';
-			} else if(h2.textContent !== '') {
-				h2.textContent = '';
-				h2.append(input.value);
-			} else {
-				return;
-			}
-
-			if(results !== '') {
-				showPrediction(results)
-			}
-
+			showPrediction(results);
 			// knn.save();
 		} else {
 			console.error(error);
 		}
-
 	});
 	// console.log('Logits: ', logits);
 	// console.log(logits.dataSync());
@@ -77,26 +76,32 @@ const clearLabel = (label) => {
 	input.value = '';
 }
 
-const showPrediction = (results) => {
+const showPrediction = async(results) => {
 	const cameraDiv = document.getElementById('camera_div');
-	const obj = results.confidencesByLabel;
 	const h1 = document.getElementById('results')
 
+	const obj = results.confidencesByLabel;
 	const keys = Object.keys(obj);
 	const values = Object.values(obj);
 
-	console.log(values)
-	console.log(keys)
+	console.log('values: ', values);
+	console.log('keys: ', keys);
+	console.log('Knn Classifier results: ', results);
 
 	if(h1.textContent === '') {
 		cameraDiv.appendChild(h1);
-		h1.append(keys);
+		h1.append(results.label);
 		h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
 	} else if(h1.textContent !== '') {
 		h1.textContent = ''
-		h1.append(keys)
+		h1.append(results.label)
 	} else {
 		return
+	}
+	
+	while(keys) {
+		console.log(results.label)
+		await sleep(3000)
 	}
 }
 
@@ -110,15 +115,15 @@ const hideBtn = (button) => {
 	button.classList = 'hidden';
 }
 
-const showBtn = (button) => {
-	button.classList += 'block';
+const showBtn = (input, button) => {
+	input.classList += 'block';
 	button.classList += 'block';
 }
 
 // Open and handle camera
 const openCamera = () => {
 
-	const image = document.createElement('img');
+const image = document.createElement('img');
 
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -150,7 +155,7 @@ const openCamera = () => {
         		showBtn(input, trainBtn);
 
 	        }
-
+	        
 	        trainBtn.addEventListener('click', (e) => {
         		if (input.value === '') {
 					console.log('empty!')
@@ -176,7 +181,6 @@ const openCamera = () => {
 		const h3 = document.querySelector('h3');
 		h3.classList = 'flex justify-center mt-8 font-sans';
 		context.drawImage(video, 0, 0, canvas.width, canvas.height);
-		canvas.classList = 'max-w-sm lg:max-w-4xl';
 		const imageDataURL = canvas.toDataURL('image/png');
 		image.src = imageDataURL;
 		// console.log(image.src)

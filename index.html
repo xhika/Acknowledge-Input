@@ -13,7 +13,7 @@
     </head>
 
     <body>
-        <div id="camera_div">
+        <div id="camera_div" class="flex flex-col">
     		<video id="video" autoplay></video>
             <h1 id="results"></h1>
         </div>
@@ -29,8 +29,8 @@
             </button>
         </div>
         
-        <h3 class="hidden">Your model was saved as:</h3>
-        <div class="result_container flex justify-center my-2">
+        <div class="result_container flex flex-col items-center my-2">
+        <h3 class="hidden">You added an example with the label:</h3>
             <h2 id="show_input"></h2>
         </div>
 
