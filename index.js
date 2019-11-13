@@ -48,20 +48,31 @@ const addExample = (label) => {
 	} else {
 		return;
 	}
+
 }
 
 const sleep = (ms) => {
 	return new Promise(res => setTimeout(res,ms));
 }
+const readCamera = (results, input) => {
+	const counts = knn.getCountByLabel();
+	// console.log(counts)
+}
 
 // Classify frame
 const classifyImage = () => {
-
+	const numLabels = knn.getNumLabels();
+	if(numLabels <= 0) {
+		console.log('No examples!');
+		return;
+	}
 	const logits = features.infer(canvas);
 	// Using KNN to classify features
 	knn.classify(logits, (error, results) => {
 		if(!error) {
+
 			showPrediction(results);
+
 			// knn.save();
 		} else {
 			console.error(error);
@@ -88,20 +99,27 @@ const showPrediction = async(results) => {
 	console.log('keys: ', keys);
 	console.log('Knn Classifier results: ', results);
 
-	if(h1.textContent === '') {
-		cameraDiv.appendChild(h1);
-		h1.append(results.label);
-		h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
-	} else if(h1.textContent !== '') {
-		h1.textContent = ''
-		h1.append(results.label)
-	} else {
-		return
-	}
 	
-	while(keys) {
-		console.log(results.label)
-		await sleep(3000)
+	// for(let i = 0; keys.length; i++) {
+	// 	console.log(results.label)
+	// 	await sleep(3000)
+	// }
+	
+	while(results.confidencesByLabel) {
+		console.log('results: ', results)
+		console.log('resultslabel: ', results.label)
+		
+		if(h1.textContent === '') {
+			cameraDiv.appendChild(h1);
+			h1.append(results.label);
+			h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
+		} else if(h1.textContent !== '') {
+			h1.textContent = ''
+			h1.append(results.label)
+		} else {
+			return
+		}
+		await await sleep(3000)
 	}
 }
 
@@ -186,6 +204,7 @@ const image = document.createElement('img');
 		// console.log(image.src)
 	}
 }
+
 
 
 
