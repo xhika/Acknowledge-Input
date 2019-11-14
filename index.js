@@ -65,8 +65,10 @@ const classifyImage = async() => {
 	console.log('testing', numLabels)
 	if(numLabels > 0) {
 		const logits = features.infer(video);
+		// Setting k value
+		const k = 3;
 		// Using KNN to classify features
-		knn.classify(logits, (error, results) => {
+		knn.classify(logits, k, (error, results) => {
 			if(!error) {
 				showPrediction(results);
 				// knn.save();
