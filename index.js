@@ -79,8 +79,8 @@ const classifyImage = async() => {
 		// console.log('Logits: ', logits);
 		// console.log(logits.dataSync());
 	}
-
-	await sleep(3000);
+	// using sleep function to avoid crash while looping
+	await sleep(500);
 	classifyImage();
 }
 const clearLabel = (label) => {
