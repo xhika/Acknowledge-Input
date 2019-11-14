@@ -31,6 +31,7 @@ const modelReady = () => {
 // Adds example to classifier
 const addExample = (label) => {
 	console.log('Adding EXAMPLE')
+
 	// Get features from the image
 	const logits = features.infer(canvas);
 
@@ -48,21 +49,16 @@ const addExample = (label) => {
 	} else {
 		return;
 	}
-
 }
 
 const sleep = (ms) => {
 	return new Promise(res => setTimeout(res,ms));
 }
-const readCamera = (results, input) => {
-	const counts = knn.getCountByLabel();
-	// console.log(counts)
-}
 
-// Classify frame
+// Classify video
 const classifyImage = async() => {
 	const numLabels = knn.getNumLabels();
-	console.log('testing', numLabels)
+	// Run function if labels exists
 	if(numLabels > 0) {
 		const logits = features.infer(video);
 		// Setting k value
@@ -71,7 +67,6 @@ const classifyImage = async() => {
 		knn.classify(logits, k, (error, results) => {
 			if(!error) {
 				showPrediction(results);
-				// knn.save();
 			} else {
 				console.error(error);
 			}
@@ -79,14 +74,9 @@ const classifyImage = async() => {
 		// console.log('Logits: ', logits);
 		// console.log(logits.dataSync());
 	}
-	// using sleep function to avoid crash while looping
+	// Using sleep function to avoid crash while looping
 	await sleep(500);
 	classifyImage();
-}
-const clearLabel = (label) => {
-	knn.clearLabel(label);
-	console.log('input', input.value)
-	input.value = '';
 }
 
 const showPrediction = async(results) => {
@@ -97,9 +87,7 @@ const showPrediction = async(results) => {
 	const keys = Object.keys(obj);
 	const values = Object.values(obj);
 
-	console.log('values: ', values);
-	console.log('keys: ', keys);
-	console.log('Knn Classifier results: ', results);
+	// console.log('Knn Classifier results: ', results);
 		
 	if(h1.textContent === '') {
 		cameraDiv.appendChild(h1);
@@ -115,7 +103,7 @@ const showPrediction = async(results) => {
 
 // Open camera on click
 camera.addEventListener('click', (e) => {
-	console.log('Open camera');
+	// console.log('Open camera');
 	openCamera();
 })
 
@@ -130,8 +118,6 @@ const showBtn = (input, button) => {
 
 // Open and handle camera
 const openCamera = () => {
-
-
 
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -158,26 +144,22 @@ const openCamera = () => {
 	        video.play();
 	        if(video.srcObject.active === true) {
 
-        		console.log('Camera ready!');
+        		// console.log('Camera ready!');
+        		
         		hideBtn(camera);
         		showBtn(input, trainBtn);
-
         		classifyImage();
-
 	        }
 	        
 	        trainBtn.addEventListener('click', (e) => {
         		if (input.value === '') {
-					console.log('empty!')
+					// console.log('empty!')
 					return;
 				} else {
 		        	takeSnapshot();
 		        	addExample(input.value);
-		        	// classifyImage();
 				}
-
-	        	console.log('TRAINING');
-	
+	        	// console.log('TRAINING');
 			});
 	    })
 	    .catch(function(error) {
@@ -188,7 +170,7 @@ const openCamera = () => {
 }
 // Take a snapshot
 const takeSnapshot = () => {
-	console.log('Taking Snapshot')
+	// console.log('Taking Snapshot')
 	const h3 = document.querySelector('h3');
 	h3.classList = 'flex justify-center mt-8 font-sans';
 	context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -204,9 +186,6 @@ const takeSnapshot = () => {
 
 // Creates a KNN classifier
 const knn = ml5.KNNClassifier();
-
-// Calling the image method with MobileNet model
-const mobileNet = ml5.imageClassifier('MobileNet', modelReady);
 
 // Extract the already learned features from MobileNet
 const features = ml5.featureExtractor('MobileNet', modelReady);
