@@ -21,7 +21,7 @@ const video = document.querySelector('video');
 const input = document.querySelector('input');
 const trainBtn = document.querySelector('button.train');
 const camera = document.getElementById('camera_button');
-
+const image = document.createElement('img');
 
 
 const modelReady = () => {
@@ -60,26 +60,26 @@ const readCamera = (results, input) => {
 }
 
 // Classify frame
-const classifyImage = () => {
+const classifyImage = async() => {
 	const numLabels = knn.getNumLabels();
-	if(numLabels <= 0) {
-		console.log('No examples!');
-		return;
+	console.log('testing', numLabels)
+	if(numLabels > 0) {
+		const logits = features.infer(video);
+		// Using KNN to classify features
+		knn.classify(logits, (error, results) => {
+			if(!error) {
+				showPrediction(results);
+				// knn.save();
+			} else {
+				console.error(error);
+			}
+		});
+		// console.log('Logits: ', logits);
+		// console.log(logits.dataSync());
 	}
-	const logits = features.infer(canvas);
-	// Using KNN to classify features
-	knn.classify(logits, (error, results) => {
-		if(!error) {
 
-			showPrediction(results);
-
-			// knn.save();
-		} else {
-			console.error(error);
-		}
-	});
-	// console.log('Logits: ', logits);
-	// console.log(logits.dataSync());
+	await sleep(3000);
+	classifyImage();
 }
 const clearLabel = (label) => {
 	knn.clearLabel(label);
@@ -98,28 +98,16 @@ const showPrediction = async(results) => {
 	console.log('values: ', values);
 	console.log('keys: ', keys);
 	console.log('Knn Classifier results: ', results);
-
-	
-	// for(let i = 0; keys.length; i++) {
-	// 	console.log(results.label)
-	// 	await sleep(3000)
-	// }
-	
-	while(results.confidencesByLabel) {
-		console.log('results: ', results)
-		console.log('resultslabel: ', results.label)
 		
-		if(h1.textContent === '') {
-			cameraDiv.appendChild(h1);
-			h1.append(results.label);
-			h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
-		} else if(h1.textContent !== '') {
-			h1.textContent = ''
-			h1.append(results.label)
-		} else {
-			return
-		}
-		await await sleep(3000)
+	if(h1.textContent === '') {
+		cameraDiv.appendChild(h1);
+		h1.append(results.label);
+		h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
+	} else if(h1.textContent !== '') {
+		h1.textContent = ''
+		h1.append(results.label)
+	} else {
+		return
 	}
 }
 
@@ -141,7 +129,7 @@ const showBtn = (input, button) => {
 // Open and handle camera
 const openCamera = () => {
 
-const image = document.createElement('img');
+
 
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -172,6 +160,8 @@ const image = document.createElement('img');
         		hideBtn(camera);
         		showBtn(input, trainBtn);
 
+        		classifyImage();
+
 	        }
 	        
 	        trainBtn.addEventListener('click', (e) => {
@@ -181,7 +171,7 @@ const image = document.createElement('img');
 				} else {
 		        	takeSnapshot();
 		        	addExample(input.value);
-		        	classifyImage();
+		        	// classifyImage();
 				}
 
 	        	console.log('TRAINING');
@@ -193,16 +183,16 @@ const image = document.createElement('img');
 	    })
 	};
 
-	// Take a snapshot
-	const takeSnapshot = () => {
-		console.log('Taking Snapshot')
-		const h3 = document.querySelector('h3');
-		h3.classList = 'flex justify-center mt-8 font-sans';
-		context.drawImage(video, 0, 0, canvas.width, canvas.height);
-		const imageDataURL = canvas.toDataURL('image/png');
-		image.src = imageDataURL;
-		// console.log(image.src)
-	}
+}
+// Take a snapshot
+const takeSnapshot = () => {
+	console.log('Taking Snapshot')
+	const h3 = document.querySelector('h3');
+	h3.classList = 'flex justify-center mt-8 font-sans';
+	context.drawImage(video, 0, 0, canvas.width, canvas.height);
+	const imageDataURL = canvas.toDataURL('image/png');
+	image.src = imageDataURL;
+	// console.log(image.src)
 }
 
 
@@ -214,10 +204,10 @@ const image = document.createElement('img');
 const knn = ml5.KNNClassifier();
 
 // Calling the image method with MobileNet model
-const mobileNet = ml5.imageClassifier('MobileNet', modelReady());
+const mobileNet = ml5.imageClassifier('MobileNet', modelReady);
 
 // Extract the already learned features from MobileNet
-const features = ml5.featureExtractor('MobileNet', modelReady());
+const features = ml5.featureExtractor('MobileNet', modelReady);
 
 const saveKnn = () => {
 	knn.save('KNNData');
