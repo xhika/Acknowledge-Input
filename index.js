@@ -1,3 +1,5 @@
+'use strict';
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/sw.js').then(function(registration) {
@@ -31,9 +33,10 @@ canvas.width = width;
 const video = document.querySelector('video');
 const input = document.querySelector('input');
 const trainBtn = document.querySelector('button.train');
+const infoBox = document.querySelector('.info_box');
 const camera = document.getElementById('camera_button');
 const image = document.createElement('img');
-
+const cameraDiv = document.getElementById('camera_div');
 
 const modelReady = () => {
 	console.log('Model is ready!');
@@ -91,7 +94,7 @@ const classifyImage = async() => {
 }
 
 const showPrediction = async(results) => {
-	const cameraDiv = document.getElementById('camera_div');
+
 	const h1 = document.getElementById('results')
 
 	const obj = results.confidencesByLabel;
@@ -99,7 +102,7 @@ const showPrediction = async(results) => {
 	const values = Object.values(obj);
 
 	// console.log('Knn Classifier results: ', results);
-		
+
 	if(h1.textContent === '') {
 		cameraDiv.appendChild(h1);
 		h1.append(results.label);
@@ -118,11 +121,12 @@ camera.addEventListener('click', (e) => {
 	openCamera();
 })
 
-const hideBtn = (button) => {
+const hideElement = (button, box) => {
 	button.classList = 'hidden';
+    box.classList = 'hidden';
 }
 
-const showBtn = (input, button) => {
+const showElement = (input, button) => {
 	input.classList += 'block';
 	button.classList += 'block';
 }
@@ -140,15 +144,15 @@ const openCamera = () => {
   					min: 1280,
   					ideal: 1920,
   					max: 2560
-  				}, 
+  				},
   				height: {
   					min: 720,
   					ideal: 1080,
   					max: 1440
   				},
-  			}
+  			},
 		};
-		
+
 	    navigator.mediaDevices.getUserMedia(constraints)
 	    .then(function(stream) {
 	        video.srcObject = stream;
@@ -156,12 +160,11 @@ const openCamera = () => {
 	        if(video.srcObject.active === true) {
 
         		// console.log('Camera ready!');
-        		
-        		hideBtn(camera);
-        		showBtn(input, trainBtn);
+
+        		hideElement(camera, infoBox);
+        		showElement(input, trainBtn);
         		classifyImage();
 	        }
-	        
 	        trainBtn.addEventListener('click', (e) => {
         		if (input.value === '') {
 					// console.log('empty!')
@@ -177,7 +180,6 @@ const openCamera = () => {
 	    	console.error(error);
 	    })
 	};
-
 }
 // Take a snapshot
 const takeSnapshot = () => {

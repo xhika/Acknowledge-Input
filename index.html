@@ -17,6 +17,10 @@
     <body>
         <div id="camera_div" class="flex flex-col">
     		<video id="video" height="100%" width="100%" autoplay></video>
+            <div class="info_box bg-blue-700 my-2 max-w-xs mx-auto rounded">
+                <p class="p-6 text-white">Welcome to the <span class="font-bold">Recognise Me</span> app. Here you can use the app to train the model to recognise an object. Open the camera to take a picture and dont forget, the more you <span class="font-bold text-red-600">train</span>
+                the model, the better the result.</p>
+            </div>
             <h1 id="results"></h1>
         </div>
         <div class="flex justify-center my-4">
@@ -30,7 +34,7 @@
     		<button class="train w-4/5 sm:w-3/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none hidden">Train Model
             </button>
         </div>
-        
+
         <div class="result_container flex flex-col items-center my-2">
         <h3 class="hidden">You added an example with the label:</h3>
             <h2 id="show_input"></h2>
