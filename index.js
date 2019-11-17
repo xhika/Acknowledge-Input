@@ -130,13 +130,20 @@ const showElement = (input, button) => {
 	input.classList += 'block';
 	button.classList += 'block';
 }
+let supports = navigator.mediaDevices.getSupportedConstraints();
+    if(supports['facingMode'] === true ) {
+        video.disabled = false;
+    }
 
 // Open and handle camera
 const openCamera = () => {
-
+    let supports = navigator.mediaDevices.getSupportedConstraints();
+    if(supports['facingMode'] === true) {
+        video.disabled = false;
+    }
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
+        let shouldFaceUser = true;
 		// Setting constraints for camera
 		const constraints = {
   			video: {
@@ -150,6 +157,7 @@ const openCamera = () => {
   					ideal: 1080,
   					max: 1440
   				},
+            facingMode: shouldFaceUser ? 'user' : 'environment'
   			},
 		};
 
@@ -165,6 +173,7 @@ const openCamera = () => {
         		showElement(input, trainBtn);
         		classifyImage();
 	        }
+
 	        trainBtn.addEventListener('click', (e) => {
         		if (input.value === '') {
 					// console.log('empty!')
@@ -175,6 +184,27 @@ const openCamera = () => {
 				}
 	        	// console.log('TRAINING');
 			});
+
+            const capture = () => {
+                    constraints.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
+                    navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(_stream) {
+                    stream  = _stream;
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function(err) {
+                    console.log(err)
+                });
+            }
+            video.addEventListener('dblclick', (e) => {
+                if(stream == null) return
+                    stream.getTracks().forEach(t => {
+                        t.stop();
+                    })
+                shouldFaceUser = !shouldFaceUser
+                capture();
+            })
 	    })
 	    .catch(function(error) {
 	    	console.error(error);
