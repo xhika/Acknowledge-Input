@@ -135,6 +135,7 @@ let supports = navigator.mediaDevices.getSupportedConstraints();
         video.disabled = false;
     }
 
+
 // Open and handle camera
 const openCamera = () => {
     let supports = navigator.mediaDevices.getSupportedConstraints();
@@ -148,19 +149,18 @@ const openCamera = () => {
 		const constraints = {
   			video: {
   				width: {
-  					min: 1280,
-  					ideal: 1920,
-  					max: 2560
+  					min: 320,
+  					ideal: 1280,
+  					max: 1920
   				},
   				height: {
-  					min: 720,
-  					ideal: 1080,
-  					max: 1440
+  					min: 600,
+  					ideal: 720,
+  					max: 1080
   				},
             facingMode: shouldFaceUser ? 'user' : 'environment'
   			},
 		};
-
 	    navigator.mediaDevices.getUserMedia(constraints)
 	    .then(function(stream) {
 	        video.srcObject = stream;
@@ -168,7 +168,7 @@ const openCamera = () => {
 	        if(video.srcObject.active === true) {
 
         		// console.log('Camera ready!');
-
+                video.setAttribute('width', '100%');
         		hideElement(camera, infoBox);
         		showElement(input, trainBtn);
         		classifyImage();

@@ -12,20 +12,21 @@
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <!-- manifest -->
     <link rel="manifest" href="./manifest.json">
-    <!-- gtag -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=ZB82DWET1L"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133296409-3"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'ZB82DWET1L');
+      gtag('config', 'UA-133296409-3');
     </script>
+
     </head>
 
     <body>
         <div id="camera_div" class="flex flex-col">
-    		<video id="video" height="100%" width="100%" autoplay></video>
+    		<video id="video" height="100%" width="60%" autoplay></video>
             <div class="info_box bg-blue-700 my-2 max-w-xs mx-auto rounded">
                 <p class="p-6 text-white text-xs md:text-sm lg:text-base">Welcome to the <span class="font-bold">Recognise Me</span> app. Here you can use the app to train the model to recognise an object. Open the camera to take a picture and dont forget, the more you <span class="font-bold text-red-600">train</span>
                 the model, the better the result. You can also switch camera by double tapp on camera screen.</p>
