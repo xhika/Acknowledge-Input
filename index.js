@@ -40,8 +40,15 @@ const cameraDiv = document.getElementById('camera_div');
 
 const modelReady = () => {
 	console.log('Model is ready!');
-}
 
+}
+const loadKNN = () => {
+    // const data = JSON.parse(localStorage.getItem('myKNN.json'));
+    const data = JSON.parse(localStorage.getItem('myKNN.json'));
+    knn.load(data, function() {
+        console.log('knn loaded')
+    });
+}
 // Adds example to classifier
 const addExample = (label) => {
 	console.log('Adding EXAMPLE')
@@ -63,6 +70,7 @@ const addExample = (label) => {
 	} else {
 		return;
 	}
+    saveKnn(knn, 'myKNN.json');
 }
 
 const sleep = (ms) => {
@@ -138,6 +146,7 @@ let supports = navigator.mediaDevices.getSupportedConstraints();
 
 // Open and handle camera
 const openCamera = () => {
+    loadKNN();
     let supports = navigator.mediaDevices.getSupportedConstraints();
     if(supports['facingMode'] === true) {
         video.disabled = false;
@@ -233,9 +242,28 @@ const knn = ml5.KNNClassifier();
 // Extract the already learned features from MobileNet
 const features = ml5.featureExtractor('MobileNet', modelReady);
 
-const saveKnn = () => {
-	knn.save('KNNData');
+const createStorage = (name, dataset) => {
+    localStorage.setItem(name, JSON.stringify(dataset))
 }
-const loadKnn = () => {
-	knn.load('./KNNdata.json');
-}
+
+const saveKnn = (knn, name) => {
+    const dataset = knn.knnClassifier.getClassifierDataset();
+    if (knn.mapStringToIndex.length > 0) {
+        Object.keys(dataset).forEach(key => {
+            if (knn.mapStringToIndex[key]) {
+                dataset[key].label = knn.mapStringToIndex[key];
+            }
+        });
+    }
+    const tensors = Object.keys(dataset).map(key => {
+        const t = dataset[key];
+        if (t) {
+            return t.dataSync();
+        }
+            return null;
+    });
+    let fileName = 'myKNN.json';
+    createStorage(fileName, JSON.stringify({ dataset, tensors }));
+};
+
+
