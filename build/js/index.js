@@ -188,12 +188,31 @@ var loadCache = function loadCache() {
   var request = new Request('/logits');
   caches.open('knnDataCache').then(function (cache) {
     cache.match(request).then(function (responses) {
-      // console.log(responses)
+      if (responses === undefined) {
+        return;
+      } // console.log(responses)
+
+
       responses.json().then(function (json) {
         var retrievedCache = json;
-        JSON.stringify(retrievedCache);
-        console.log(retrievedCache);
-        knn.load(retrievedCache, function (results, error) {
+        var dataset = [];
+        var tensors = [];
+        var i = 0;
+
+        for (var logit in retrievedCache) {
+          var result = JSON.parse(retrievedCache[logit]);
+          dataset.push(result.dataset[i]);
+          tensors.push(result.tensors[i]);
+          i++;
+        } // console.log({ dataset, tensors })
+
+
+        knn.load({
+          dataset: dataset,
+          tensors: tensors
+        }, function (results, error) {
+          console.log('knn loaded');
+
           if (!error) {
             console.log(results);
           } else {
@@ -216,7 +235,7 @@ var addExample = function addExample(label) {
 
   if (h2.innerHTML === '') {
     h2.append(label);
-    h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-600 text-white font-bold py-2 px-4 rounded';
+    h2.classList = 'w-4/5 sm:w-3/5 text-center bg-green-6logit0 text-white font-bold py-2 px-4 rounded';
   } else if (h2.innerHTML !== '') {
     h2.innerHTML = '';
     h2.append(label);
@@ -224,10 +243,33 @@ var addExample = function addExample(label) {
     return;
   } // console.log(logits)
   // const logitData = logits.dataSync()
-  // console.log(logitData)
+  //const dataset = knn.getClassifierDataset();
 
 
-  createCache(logitData, label);
+  var dataset = knn.getClassifierDataset();
+
+  if (knn.mapStringToIndex.length > 0) {
+    Object.keys(dataset).forEach(function (key) {
+      if (knn.mapStringToIndex[key]) {
+        dataset[key].label = knn.mapStringToIndex[key];
+      }
+    });
+  }
+
+  var tensors = Object.keys(dataset).map(function (key) {
+    var t = dataset[key];
+
+    if (t) {
+      return t.dataSync();
+    }
+
+    return null;
+  }); // console.log(logitData)
+
+  createCache(JSON.stringify({
+    dataset: dataset,
+    tensors: tensors
+  }), label);
 };
 
 var sleep = function sleep(ms) {
@@ -252,6 +294,7 @@ var classifyImage = function classifyImage() {
 
             knn.classify(logits, k, function (error, results) {
               if (!error) {
+                // knn.save('fileName')
                 showPrediction(results);
               } else {
                 console.error(error);

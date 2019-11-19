@@ -81,12 +81,30 @@ const loadCache = () => {
     const request = new Request('/logits')
     caches.open('knnDataCache').then((cache) => {
         cache.match(request).then((responses) => {
+            if (responses === undefined) {
+                return
+            }
+
             // console.log(responses)
             responses.json().then((json) => {
                 const retrievedCache = json
-                JSON.stringify(retrievedCache)
-                console.log(retrievedCache)
-                knn.load(retrievedCache, (results, error) => {
+
+                let dataset = []
+                let tensors = []
+                let i = 0
+                for (let logit in retrievedCache) {
+                    let result = JSON.parse(retrievedCache[logit])
+
+                    dataset.push(result.dataset[i])
+                    tensors.push(result.tensors[i])
+
+                    i++
+                }
+
+                // console.log({ dataset, tensors })
+
+                knn.load({ dataset, tensors }, (results, error) => {
+                    console.log('knn loaded')
                     if(!error) {
                         console.log(results)
                     } else {
@@ -121,10 +139,26 @@ const addExample = (label) => {
 	} else {
 		return;
 	}
-    // console.log(logits)
-    // const logitData = logits.dataSync()
+
+    const dataset = knn.getClassifierDataset();
+
+        if (knn.mapStringToIndex.length > 0) {
+            Object.keys(dataset).forEach(key => {
+                if (knn.mapStringToIndex[key]) {
+                    dataset[key].label = knn.mapStringToIndex[key];
+                }
+            });
+        }
+        const tensors = Object.keys(dataset).map(key => {
+        const t = dataset[key];
+            if (t) {
+                return t.dataSync();
+            }
+                return null;
+        });
+
     // console.log(logitData)
-    createCache(logitData, label);
+    createCache(JSON.stringify({ dataset, tensors }), label);
 }
 
 const sleep = (ms) => {
@@ -142,6 +176,7 @@ const classifyImage = async() => {
 		// Using KNN to classify features
 		knn.classify(logits, k, (error, results) => {
 			if(!error) {
+                // knn.save('fileName')
 				showPrediction(results);
 			} else {
 				console.error(error);
