@@ -77,7 +77,19 @@ const createCache = (data, label) => {
     });
 }
 
-
+const loadCache = () => {
+    const request = new Request('/logits')
+    caches.open('knnDataCache').then((cache) => {
+        cache.match(request).then((responses) => {
+            // console.log(responses)
+            responses.json().then((json) => {
+                const retrievedCache = json
+                console.log(retrievedCache)
+            });
+            // console.log(`There are ${responses.length} matching responses.`);
+        });
+    });
+}
 
 
 // Adds example to classifier
@@ -158,7 +170,7 @@ const showPrediction = async(results) => {
 camera.addEventListener('click', (e) => {
 	// console.log('Open camera');
 	openCamera();
-
+    loadCache();
 })
 
 const hideElement = (button, box) => {

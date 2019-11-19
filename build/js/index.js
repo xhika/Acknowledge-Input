@@ -182,6 +182,19 @@ var createCache = function createCache(data, label) {
       });
     });
   });
+};
+
+var loadCache = function loadCache() {
+  var request = new Request('/logits');
+  caches.open('knnDataCache').then(function (cache) {
+    cache.match(request).then(function (responses) {
+      // console.log(responses)
+      responses.json().then(function (json) {
+        var retrievedCache = json;
+        console.log(retrievedCache);
+      }); // console.log(`There are ${responses.length} matching responses.`);
+    });
+  });
 }; // Adds example to classifier
 
 
@@ -302,6 +315,7 @@ var showPrediction = function showPrediction(results) {
 camera.addEventListener('click', function (e) {
   // console.log('Open camera');
   openCamera();
+  loadCache();
 });
 
 var hideElement = function hideElement(button, box) {
