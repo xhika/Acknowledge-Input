@@ -1,16 +1,16 @@
 'use strict';
 
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', function() {
-//     navigator.serviceWorker.register('/sw.js').then(function(registration) {
-//       // Registration was successful
-//       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//     }, function(err) {
-//       // registration failed :(
-//       console.log('ServiceWorker registration failed: ', err);
-//     });
-//   });
-// }
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
 
 
 // Create canvas
@@ -40,15 +40,46 @@ const cameraDiv = document.getElementById('camera_div');
 
 const modelReady = () => {
 	console.log('Model is ready!');
-
 }
-const loadKNN = () => {
-    // const data = JSON.parse(localStorage.getItem('myKNN.json'));
-    const data = JSON.parse(localStorage.getItem('myKNN.json'));
-    knn.load(data, function() {
-        console.log('knn loaded')
+
+const createCache = (data, label) => {
+    const options = {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    caches.open('knnDataCache').then((cache) => {
+        //console.log(data)
+        let content = {};
+
+        const request = new Request('/logits')
+        cache.match(request).then(async (response) => {
+            if (response !== undefined) {
+                await response.json().then((json) => {
+                    content = json
+                });
+            }
+
+            content[label] = data
+            let cacheData = JSON.stringify(content)
+
+            // let cacheData = JSON.stringify(
+            //     Array.isArray(content)
+            //         ? [...content, data]
+            //         : [content, data]
+            // )
+
+            const jsonRes = new Response(cacheData, options);
+            cache.put('logits', jsonRes)
+            // console.log(content)
+        });
     });
 }
+
+
+
+
 // Adds example to classifier
 const addExample = (label) => {
 	console.log('Adding EXAMPLE')
@@ -70,7 +101,8 @@ const addExample = (label) => {
 	} else {
 		return;
 	}
-    saveKnn(knn, 'myKNN.json');
+    const logitData = logits.dataSync()
+    createCache(logitData, label);
 }
 
 const sleep = (ms) => {
@@ -102,22 +134,21 @@ const classifyImage = async() => {
 }
 
 const showPrediction = async(results) => {
-
+    const label = results.label;
 	const h1 = document.getElementById('results')
-
-	const obj = results.confidencesByLabel;
-	const keys = Object.keys(obj);
-	const values = Object.values(obj);
-
+	// const obj = results.confidencesByLabel;
+	// const keys = Object.keys(obj);
+	// const values = Object.values(obj);
+    // logits = logits.dataSync();
 	// console.log('Knn Classifier results: ', results);
 
 	if(h1.textContent === '') {
 		cameraDiv.appendChild(h1);
-		h1.append(results.label);
+		h1.append(label);
 		h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
 	} else if(h1.textContent !== '') {
 		h1.textContent = ''
-		h1.append(results.label)
+		h1.append(label)
 	} else {
 		return
 	}
@@ -127,6 +158,7 @@ const showPrediction = async(results) => {
 camera.addEventListener('click', (e) => {
 	// console.log('Open camera');
 	openCamera();
+
 })
 
 const hideElement = (button, box) => {
@@ -146,7 +178,6 @@ let supports = navigator.mediaDevices.getSupportedConstraints();
 
 // Open and handle camera
 const openCamera = () => {
-    loadKNN();
     let supports = navigator.mediaDevices.getSupportedConstraints();
     if(supports['facingMode'] === true) {
         video.disabled = false;
@@ -241,29 +272,5 @@ const knn = ml5.KNNClassifier();
 
 // Extract the already learned features from MobileNet
 const features = ml5.featureExtractor('MobileNet', modelReady);
-
-const createStorage = (name, dataset) => {
-    localStorage.setItem(name, JSON.stringify(dataset))
-}
-
-const saveKnn = (knn, name) => {
-    const dataset = knn.knnClassifier.getClassifierDataset();
-    if (knn.mapStringToIndex.length > 0) {
-        Object.keys(dataset).forEach(key => {
-            if (knn.mapStringToIndex[key]) {
-                dataset[key].label = knn.mapStringToIndex[key];
-            }
-        });
-    }
-    const tensors = Object.keys(dataset).map(key => {
-        const t = dataset[key];
-        if (t) {
-            return t.dataSync();
-        }
-            return null;
-    });
-    let fileName = 'myKNN.json';
-    createStorage(fileName, JSON.stringify({ dataset, tensors }));
-};
 
 
