@@ -191,7 +191,15 @@ var loadCache = function loadCache() {
       // console.log(responses)
       responses.json().then(function (json) {
         var retrievedCache = json;
+        JSON.stringify(retrievedCache);
         console.log(retrievedCache);
+        knn.load(retrievedCache, function (results, error) {
+          if (!error) {
+            console.log(results);
+          } else {
+            console.error(error);
+          }
+        });
       }); // console.log(`There are ${responses.length} matching responses.`);
     });
   });
@@ -214,9 +222,11 @@ var addExample = function addExample(label) {
     h2.append(label);
   } else {
     return;
-  }
+  } // console.log(logits)
+  // const logitData = logits.dataSync()
+  // console.log(logitData)
 
-  var logitData = logits.dataSync();
+
   createCache(logitData, label);
 };
 
@@ -272,11 +282,7 @@ var showPrediction = function showPrediction(results) {
       switch (_context3.prev = _context3.next) {
         case 0:
           label = results.label;
-          h1 = document.getElementById('results'); // const obj = results.confidencesByLabel;
-          // const keys = Object.keys(obj);
-          // const values = Object.values(obj);
-          // logits = logits.dataSync();
-          // console.log('Knn Classifier results: ', results);
+          h1 = document.getElementById('results'); // console.log('Knn Classifier results: ', results);
 
           if (!(h1.textContent === '')) {
             _context3.next = 8;

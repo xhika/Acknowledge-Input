@@ -84,7 +84,15 @@ const loadCache = () => {
             // console.log(responses)
             responses.json().then((json) => {
                 const retrievedCache = json
+                JSON.stringify(retrievedCache)
                 console.log(retrievedCache)
+                knn.load(retrievedCache, (results, error) => {
+                    if(!error) {
+                        console.log(results)
+                    } else {
+                        console.error(error)
+                    }
+                })
             });
             // console.log(`There are ${responses.length} matching responses.`);
         });
@@ -113,7 +121,9 @@ const addExample = (label) => {
 	} else {
 		return;
 	}
-    const logitData = logits.dataSync()
+    // console.log(logits)
+    // const logitData = logits.dataSync()
+    // console.log(logitData)
     createCache(logitData, label);
 }
 
@@ -148,12 +158,8 @@ const classifyImage = async() => {
 const showPrediction = async(results) => {
     const label = results.label;
 	const h1 = document.getElementById('results')
-	// const obj = results.confidencesByLabel;
-	// const keys = Object.keys(obj);
-	// const values = Object.values(obj);
-    // logits = logits.dataSync();
-	// console.log('Knn Classifier results: ', results);
 
+	// console.log('Knn Classifier results: ', results);
 	if(h1.textContent === '') {
 		cameraDiv.appendChild(h1);
 		h1.append(label);
