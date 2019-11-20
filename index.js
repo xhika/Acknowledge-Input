@@ -105,9 +105,13 @@ const loadCache = () => {
 
                 // console.log({ dataset, tensors })
 
-                knn.load({ dataset, tensors }, (results, error) => {
+                knn.load({ dataset, tensors }, (error) => {
                     if(!error) {
-                        console.log('knn loaded')
+                        if(dataset.length || tensors.length > 0) {
+                            console.log('Logit cache loaded')
+                        } else {
+                            return;
+                        }
                     } else {
                         console.error(error)
                     }
@@ -121,7 +125,7 @@ const loadCache = () => {
 
 // Adds example to classifier
 const addExample = (label) => {
-	console.log('Adding EXAMPLE')
+	console.log('Adding Example')
 
 	// Get features from the image
 	const logits = features.infer(canvas);
@@ -227,7 +231,7 @@ const showElement = (input, button) => {
 // Open and handle camera
 const openCamera = () => {
     let supports = navigator.mediaDevices.getSupportedConstraints();
-    console.log(supports)
+    // console.log(supports)
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         let shouldFaceUser = true;
@@ -250,10 +254,9 @@ const openCamera = () => {
 	    .then(function(stream) {
 	        video.srcObject = stream;
             video.play();
-            console.log(stream)
 	        if(video.srcObject.active === true) {
 
-        		console.log('Camera ready!');
+        		// console.log('Camera ready!');
                 // video.setAttribute('width', '100%');
         		hideElement(camera, infoBox);
         		showElement(input, trainBtn);
@@ -283,7 +286,6 @@ const openCamera = () => {
                 .then(function(_stream) {
                     stream = _stream;
                     video.srcObject = stream;
-                    console.log(_stream)
                     video.play();
                 })
                 .catch(function(err) {
