@@ -199,12 +199,12 @@ const showPrediction = async(results) => {
 	const h1 = document.getElementById('results')
 
 	// console.log('Knn Classifier results: ', results);
-	if(h1.textContent === '') {
-		cameraDiv.appendChild(h1);
+	if(h1.innerHTML === '') {
+		cameraDiv.append(h1);
 		h1.append(label);
 		h1.classList = 'w-full text-center bg-black text-white font-bold py-2 px-4';
-	} else if(h1.textContent !== '') {
-		h1.textContent = ''
+	} else if(h1.innerHTML !== '') {
+		h1.innerHTML = ''
 		h1.append(label)
 	} else {
 		return
