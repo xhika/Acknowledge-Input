@@ -1,6 +1,6 @@
 {
-  "name": "Recognise Me",
-  "short_name": "RecogniseMe",
+  "name": "AI - Acknowledge Input",
+  "short_name": "AI",
   "theme_color": "#2b6cb0",
   "background_color": "#2b6cb0",
   "display": "standalone",
