@@ -312,6 +312,7 @@ const takeSnapshot = () => {
 	context.drawImage(video, 0, 0, canvas.width, canvas.height);
 	const imageDataURL = canvas.toDataURL('image/png');
 	image.src = imageDataURL;
+    canvas.classList = 'hidden';
 	// console.log(image.src)
 }
 
