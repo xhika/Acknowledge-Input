@@ -223,11 +223,6 @@ const showElement = (input, button) => {
 	input.classList += 'block';
 	button.classList += 'block';
 }
-let supports = navigator.mediaDevices.getSupportedConstraints();
-    if(supports['facingMode'] === true ) {
-        video.disabled = false;
-    }
-
 
 // Open and handle camera
 const openCamera = () => {
