@@ -11,7 +11,9 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
-
+window.onbeforeunload = () => {
+    window.scrollTo(0,0);
+};
 
 // Create canvas
 const canvas = document.createElement('canvas');
@@ -104,9 +106,8 @@ const loadCache = () => {
                 // console.log({ dataset, tensors })
 
                 knn.load({ dataset, tensors }, (results, error) => {
-                    console.log('knn loaded')
                     if(!error) {
-                        console.log(results)
+                        console.log('knn loaded')
                     } else {
                         console.error(error)
                     }
@@ -176,7 +177,6 @@ const classifyImage = async() => {
 		// Using KNN to classify features
 		knn.classify(logits, k, (error, results) => {
 			if(!error) {
-                // knn.save('fileName')
 				showPrediction(results);
 			} else {
 				console.error(error);
@@ -227,9 +227,7 @@ const showElement = (input, button) => {
 // Open and handle camera
 const openCamera = () => {
     let supports = navigator.mediaDevices.getSupportedConstraints();
-    if(supports['facingMode'] === true) {
-        video.disabled = false;
-    }
+    console.log(supports)
 	// Get access to the camera!
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         let shouldFaceUser = true;
@@ -246,20 +244,26 @@ const openCamera = () => {
   					ideal: 720,
   					max: 1080
   				},
-            facingMode: shouldFaceUser ? 'user' : 'environment'
   			},
 		};
-	    navigator.mediaDevices.getUserMedia(constraints)
+        navigator.mediaDevices.getUserMedia(constraints)
 	    .then(function(stream) {
 	        video.srcObject = stream;
-	        video.play();
+            video.play();
+            console.log(stream)
 	        if(video.srcObject.active === true) {
 
-        		// console.log('Camera ready!');
-                video.setAttribute('width', '100%');
+        		console.log('Camera ready!');
+                // video.setAttribute('width', '100%');
         		hideElement(camera, infoBox);
         		showElement(input, trainBtn);
         		classifyImage();
+                setTimeout(() => {
+                    trainBtn.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    input.focus();
+                },1700)
 	        }
 
 	        trainBtn.addEventListener('click', (e) => {
@@ -274,11 +278,12 @@ const openCamera = () => {
 			});
 
             const capture = () => {
-                    constraints.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
-                    navigator.mediaDevices.getUserMedia(constraints)
+                constraints.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
+                navigator.mediaDevices.getUserMedia(constraints)
                 .then(function(_stream) {
-                    stream  = _stream;
+                    stream = _stream;
                     video.srcObject = stream;
+                    console.log(_stream)
                     video.play();
                 })
                 .catch(function(err) {
@@ -297,7 +302,7 @@ const openCamera = () => {
 	    .catch(function(error) {
 	    	console.error(error);
 	    })
-	};
+	}
 }
 // Take a snapshot
 const takeSnapshot = () => {
