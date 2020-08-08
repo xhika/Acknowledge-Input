@@ -9,7 +9,9 @@
   "devDependencies": {
     "cross-env": "^6.0.3",
     "laravel-mix": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "dot-prop": ">=5.1.1",
+    "elliptic": ">=6.5.3"
   },
   "scripts": {
     "dev": "npm run development",
