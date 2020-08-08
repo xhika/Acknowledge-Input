@@ -31,28 +31,29 @@
 
 <body>
     <div id="camera_div" class="flex flex-col mx-auto max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-5xl">
-        <video id="video" height="100%" width="100%" class="mx-auto" autoplay></video>
-        <div class="info_box bg-blue-700 my-2 sm:w-3/5 md:w-4/5 xl:max-w-4xl mx-auto rounded">
-            <p class="p-6 text-white text-sm md:text-lg lg:text-xl">Welcome to the <span class="font-bold">Acknowledge
+        <video id="video" height="50%" width="100%" class="mx-auto" autoplay></video>
+        <div class="info_box bg-indigo-400 my-2 sm:w-3/5 md:w-4/5 xl:max-w-3xl mx-auto rounded">
+            <p class="p-6 text-white text-sm md:text-lg lg:text-xl leading-relaxed">Welcome to the <span
+                    class="font-bold">Acknowledge
                     Input</span> app. Here you can use the app to train the model to recognise an object. Open the
-                camera to take a picture and dont forget, the more you <span class="font-bold text-red-600">train</span>
+                camera to take a picture and dont forget, the more you <span class="font-bold text-red-400">train</span>
                 the model, the better the result. You can also switch camera by double tapp on camera screen.</p>
         </div>
         <h1 id="results"></h1>
     </div>
     <div class="flex justify-center my-4">
         <button id="camera_button"
-            class="w-2/6 md:w-2/6  bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Open
+            class="sm:w-3/5 md:w-4/5 xl:max-w-3xl mx-auto bg-indigo-400 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Open
             Camera
         </button>
     </div>
     <div class="my-2 flex justify-center">
         <input type="text" placeholder="Describe your photo"
-            class="w-4/5 sm:w-3/5 bg-gray-300 outline-none focus:bg-white focus:border-blue-400 border-2 border-gray-400 rounded py-2 border-solid my-2 pl-2 shadow hidden">
+            class="w-4/5 sm:w-3/5 bg-gray-300 outline-none focus:bg-white focus:border-indigo-400 border-2 border-gray-400 rounded py-2 border-solid my-2 pl-2 shadow hidden">
     </div>
     <div class="my-2 flex justify-center">
         <button
-            class="train w-4/5 sm:w-3/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">Train
+            class="train w-4/5 sm:w-3/5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">Train
             Model
         </button>
     </div>
