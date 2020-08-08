@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+
+<head>
     <title>AI - Acknowledge Input</title>
     <meta charset="UTF-8">
     <meta charset="utf-8">
@@ -13,47 +14,55 @@
     <!-- manifest -->
     <link rel="manifest" href="/manifest.json">
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133296409-3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLRB58K9N3"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'UA-133296409-3');
+        gtag('config', 'G-FLRB58K9N3');
     </script>
     <style>
         html {
             scroll-behavior: smooth
         }
     </style>
-    </head>
+</head>
 
-    <body>
-        <div id="camera_div" class="flex flex-col mx-auto max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-5xl">
-    		<video id="video" height="100%" width="100%" class="mx-auto" autoplay></video>
-            <div class="info_box bg-blue-700 my-2 sm:w-3/5 md:w-4/5 xl:max-w-4xl mx-auto rounded">
-                <p class="p-6 text-white text-sm md:text-lg lg:text-xl">Welcome to the <span class="font-bold">Acknowledge Input</span> app. Here you can use the app to train the model to recognise an object. Open the camera to take a picture and dont forget, the more you <span class="font-bold text-red-600">train</span>
+<body>
+    <div id="camera_div" class="flex flex-col mx-auto max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-5xl">
+        <video id="video" height="100%" width="100%" class="mx-auto" autoplay></video>
+        <div class="info_box bg-blue-700 my-2 sm:w-3/5 md:w-4/5 xl:max-w-4xl mx-auto rounded">
+            <p class="p-6 text-white text-sm md:text-lg lg:text-xl">Welcome to the <span class="font-bold">Acknowledge
+                    Input</span> app. Here you can use the app to train the model to recognise an object. Open the
+                camera to take a picture and dont forget, the more you <span class="font-bold text-red-600">train</span>
                 the model, the better the result. You can also switch camera by double tapp on camera screen.</p>
-            </div>
-            <h1 id="results"></h1>
         </div>
-        <div class="flex justify-center my-4">
-            <button id="camera_button" class="w-2/6 md:w-2/6  bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Open Camera
-            </button>
-        </div>
-        <div class="my-2 flex justify-center">
-            <input type="text" placeholder="Describe your photo" class="w-4/5 sm:w-3/5 bg-gray-300 outline-none focus:bg-white focus:border-blue-400 border-2 border-gray-400 rounded py-2 border-solid my-2 pl-2 shadow hidden">
-        </div>
-        <div class="my-2 flex justify-center">
-    		<button class="train w-4/5 sm:w-3/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">Train Model
-            </button>
-        </div>
+        <h1 id="results"></h1>
+    </div>
+    <div class="flex justify-center my-4">
+        <button id="camera_button"
+            class="w-2/6 md:w-2/6  bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Open
+            Camera
+        </button>
+    </div>
+    <div class="my-2 flex justify-center">
+        <input type="text" placeholder="Describe your photo"
+            class="w-4/5 sm:w-3/5 bg-gray-300 outline-none focus:bg-white focus:border-blue-400 border-2 border-gray-400 rounded py-2 border-solid my-2 pl-2 shadow hidden">
+    </div>
+    <div class="my-2 flex justify-center">
+        <button
+            class="train w-4/5 sm:w-3/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">Train
+            Model
+        </button>
+    </div>
 
-        <div class="result_container flex flex-col items-center my-2">
+    <div class="result_container flex flex-col items-center my-2">
         <h3 class="hidden">You added an example with the label:</h3>
-            <h2 id="show_input"></h2>
-        </div>
+        <h2 id="show_input"></h2>
+    </div>
 
     <script src="/build/js/index.js"></script>
-    </body>
+</body>
+
 </html>
